@@ -1,0 +1,68 @@
+/*==============================
+ Project: SMART GATE
+ Designed: NDABAHARIYE Jean Aime and MUSABYEMARIYA Cecile
+ Date: 29/02/2020
+===============================*/
+#define blue 7     //Declaration and initialization of blue LED
+#define red 6     //Declaration and initialization of red LED
+#define buzzer 6     //Declaration and initialization of buzzer
+#define dc 6     //Declaration and initialization of DC motor
+#define green 7     //Declaration and initialization of green LED
+int trigPin = 11;     //Declaration and initialization of TRIGGER
+int echoPin = 12;     //Declaration and initialization of ECHO
+long duration, distance;     //Declaration and initialization of duration and distance
+ 
+void setup() {
+  Serial.begin (9600);          //Rate bound
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(green, OUTPUT);
+  pinMode(blue, OUTPUT);
+  pinMode(red, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(dc, OUTPUT);
+
+}
+ 
+void loop() 
+{
+  digitalWrite(trigPin, LOW);            
+  delayMicroseconds(5);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  pinMode(echoPin, INPUT);
+  
+  duration = pulseIn(echoPin, HIGH);
+  distance = (duration/2) / 29.1;          //Formula to calculate distance
+  Serial.print(distance);     //Method used to printout the value of gained distance
+  Serial.print(" cm");        //Measure in centimeter
+  Serial.println();
+
+  if(distance <= 20)   //Condition if distance is less than or equal to 50 cm
+  {
+digitalWrite(dc, HIGH);        //DC motor is ON                                                                                                                                                                                                                                                                                                                                                       
+delay(2000);                   //Delay of 2 seconds
+digitalWrite(green, LOW);      //Green LED is ON
+digitalWrite(blue, LOW);       //Blue LED is ON
+tone(buzzer,20000);             //BUZZER is ON   
+digitalWrite(red, HIGH);       //Red LED is ON                                                                                                                                                                                                                                                                                                                                                     
+delay(100);
+
+  }
+  else
+  {
+digitalWrite(green, HIGH);
+delay(100);
+digitalWrite(green, LOW);
+delay(0);
+digitalWrite(blue, HIGH);                                                                                                                                                                                                                                                                                                                                                              
+delay(100);
+digitalWrite(blue, LOW);
+digitalWrite(red, LOW); 
+digitalWrite(dc, LOW);    //DC motor is OFF  
+noTone(buzzer);           //BUZZER is OFF  
+delay(0);
+  }
+  delay(0);
+}
